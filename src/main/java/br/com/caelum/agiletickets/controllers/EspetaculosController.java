@@ -54,49 +54,48 @@ public class EspetaculosController {
 		// aqui eh onde fazemos as varias validacoes
 		// se nao tiver nome, avisa o usuario
 		// se nao tiver descricao, avisa o usuario
-		if (Strings.isNullOrEmpty(espetaculo.getNome())) {
-			validator.add(new ValidationMessage(
-					"Nome do espetáculo nao pode estar em branco", ""));
-		}
-		if (Strings.isNullOrEmpty(espetaculo.getDescricao())) {
-			validator.add(new ValidationMessage(
-					"Descricao do espetaculo nao pode estar em branco", ""));
-		}
+		verificaVazio(espetaculo.getNome(),
+				"Nome do espetáculo nao pode estar em branco");
+		verificaVazio(espetaculo.getDescricao(),
+				"Descricao do espetaculo nao pode estar em branco");
 		validator.onErrorRedirectTo(this).lista();
 
 		agenda.cadastra(espetaculo);
 		result.redirectTo(this).lista();
 	}
 
+	private void verificaVazio(String s, String mensagemErro) {
+		verificaEhErro(Strings.isNullOrEmpty(s), mensagemErro);
+	}
+
 	@Get
 	@Path("/sessao/{id}")
 	public void sessao(Long id) {
 		Sessao sessao = agenda.sessao(id);
-		if (sessao == null) {
-			result.notFound();
-		}
+		verificaEhSessaoNull(sessao);
 
 		result.include("sessao", sessao);
+	}
+
+	private boolean verificaEhSessaoNull(Sessao sessao) {
+		if (sessao == null) {
+			result.notFound();
+			return true;
+		}
+		return false;
 	}
 
 	@Post
 	@Path("/sessao/{sessaoId}/reserva")
 	public void reserva(Long sessaoId, final Integer quantidade) {
 		Sessao sessao = agenda.sessao(sessaoId);
-		if (sessao == null) {
-			result.notFound();
+		if (verificaEhSessaoNull(sessao)) {
 			return;
 		}
 
-		if (quantidade < 1) {
-			validator.add(new ValidationMessage(
-					"Voce deve escolher um lugar ou mais", ""));
-		}
-
-		if (!sessao.podeReservar(quantidade)) {
-			validator.add(new ValidationMessage(
-					"N&atilde;o existem ingressos dispon&iacute;veis", ""));
-		}
+		verificaEhErro(quantidade < 1, "Voce deve escolher um lugar ou mais");
+		verificaEhErro(!sessao.podeReservar(quantidade),
+				"Não existem ingressos disponíveis");
 
 		// em caso de erro, redireciona para a lista de sessao
 		validator.onErrorRedirectTo(this).sessao(sessao.getId());
@@ -105,6 +104,14 @@ public class EspetaculosController {
 		result.include("message", "Sessao reservada com sucesso");
 
 		result.redirectTo(IndexController.class).index();
+	}
+
+	private boolean verificaEhErro(boolean condicaoDeErro, String mensagem) {
+		if (condicaoDeErro) {
+			validator.add(new ValidationMessage(mensagem, ""));
+			return true;
+		}
+		return false;
 	}
 
 	@Get
@@ -135,9 +142,7 @@ public class EspetaculosController {
 
 	private Espetaculo carregaEspetaculo(Long espetaculoId) {
 		Espetaculo espetaculo = agenda.espetaculo(espetaculoId);
-		if (espetaculo == null) {
-			validator.add(new ValidationMessage("", ""));
-		}
+		verificaEhErro(espetaculo == null, "");
 		validator.onErrorUse(status()).notFound();
 		return espetaculo;
 	}
