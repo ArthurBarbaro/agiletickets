@@ -95,7 +95,7 @@ public class EspetaculosController {
 
 		if (!sessao.podeReservar(quantidade)) {
 			validator.add(new ValidationMessage(
-					"Nao existem ingressos dispon√≠veis", ""));
+					"N&atilde;o existem ingressos dispon&iacute;veis", ""));
 		}
 
 		// em caso de erro, redireciona para a lista de sessao
