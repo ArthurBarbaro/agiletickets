@@ -145,7 +145,7 @@ public class EspetaculoTest {
 		Assert.assertEquals(new LocalDate(2012,2,29), sessoes.get(1).getInicio().toLocalDate());
 		Assert.assertEquals(new LocalDate(2012,3,31), sessoes.get(2).getInicio().toLocalDate());
 		Assert.assertEquals(new LocalDate(2012,4,30), sessoes.get(3).getInicio().toLocalDate());
-		Assert.assertEquals(new LocalDate(2012,5,30), sessoes.get(4).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,5,31), sessoes.get(4).getInicio().toLocalDate());
 	}
 
 	@Test
