@@ -64,8 +64,8 @@ public class EspetaculosController {
 		result.redirectTo(this).lista();
 	}
 
-	private void verificaVazio(String s, String mensagemErro) {
-		verificaEhErro(Strings.isNullOrEmpty(s), mensagemErro);
+	private void verificaVazio(String texto, String mensagemErro) {
+		verificaEhErro(Strings.isNullOrEmpty(texto), mensagemErro);
 	}
 
 	@Get
