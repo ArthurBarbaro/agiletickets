@@ -25,7 +25,7 @@ public class EspetaculoTest {
 		ivete.getSessoes().add(sessaoComIngressosSobrando(3));
 		ivete.getSessoes().add(sessaoComIngressosSobrando(2));
 
-		assertTrue(ivete.Vagas(5));
+		assertTrue(ivete.vagas(5));
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class EspetaculoTest {
 		ivete.getSessoes().add(sessaoComIngressosSobrando(3));
 		ivete.getSessoes().add(sessaoComIngressosSobrando(2));
 
-		assertTrue(ivete.Vagas(6));
+		assertTrue(ivete.vagas(6));
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class EspetaculoTest {
 		ivete.getSessoes().add(sessaoComIngressosSobrando(3));
 		ivete.getSessoes().add(sessaoComIngressosSobrando(2));
 
-		assertFalse(ivete.Vagas(15));
+		assertFalse(ivete.vagas(15));
 	}
 
 	@Test
@@ -106,21 +106,46 @@ public class EspetaculoTest {
 		Assert.assertEquals(sessoes.size(), 1);
 		sessoes = espetaculo.criaSessoes(dataAtual, dataAtual, horaEspetaculo,
 				Periodicidade.SEMANAL);
-		Assert.assertEquals(sessoes.size(), 1);
+		Assert.assertEquals(1, sessoes.size());
 	}
 
 	@Test
 	public void espetaculoCriaSessoesComDataFinal7DiasDepoisDaInicialComPeriodicidadeSemanalRetorna2Sessoes() {
 		List<Sessao> sessoes = espetaculo.criaSessoes(dataAtual,
 				dataAtual.plusDays(7), horaEspetaculo, Periodicidade.SEMANAL);
-		Assert.assertEquals(sessoes.size(), 2);
+		Assert.assertEquals(2, sessoes.size());
 	}
 
 	@Test
 	public void espetaculoCriaSessoesComDataFinal7DiasDepoisDaInicialComPeriodicidadeDiariaRetorna8Sessoes() {
 		List<Sessao> sessoes = espetaculo.criaSessoes(dataAtual,
 				dataAtual.plusDays(7), horaEspetaculo, Periodicidade.DIARIA);
-		Assert.assertEquals(sessoes.size(), 8);
+		Assert.assertEquals(8, sessoes.size());
+	}
+
+	@Test
+	public void espetaculoCriaSessoesComPeriodicidadeMensalCriaSessoesComDiaDoMesIgual() {
+		LocalDate dataInicio = new LocalDate(2012,1,1);
+		LocalDate dataFim = new LocalDate(2012,5,13);
+		List<Sessao> sessoes = espetaculo.criaSessoes(dataInicio,
+				dataFim, horaEspetaculo, Periodicidade.MENSAL);
+		Assert.assertEquals(5, sessoes.size());
+		Assert.assertEquals(new LocalDate(2012,1,1), sessoes.get(0).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,2,1), sessoes.get(1).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,3,1), sessoes.get(2).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,4,1), sessoes.get(3).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,5,1), sessoes.get(4).getInicio().toLocalDate());
+		//fim do mês
+		dataInicio = new LocalDate(2012,1,31);
+		dataFim = new LocalDate(2012,5,31);
+		sessoes = espetaculo.criaSessoes(dataInicio,
+				dataFim, horaEspetaculo, Periodicidade.MENSAL);
+		Assert.assertEquals(5, sessoes.size());
+		Assert.assertEquals(new LocalDate(2012,1,31), sessoes.get(0).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,2,29), sessoes.get(1).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,3,31), sessoes.get(2).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,4,30), sessoes.get(3).getInicio().toLocalDate());
+		Assert.assertEquals(new LocalDate(2012,5,31), sessoes.get(4).getInicio().toLocalDate());
 	}
 
 	@Test

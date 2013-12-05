@@ -105,14 +105,13 @@ public class Espetaculo {
 		}
 		List<Sessao> sessoes = new ArrayList<Sessao>();
 		LocalDate proxData = dataInicio;
+		int i = 0;
 		while (!proxData.isAfter(dataFim)) {
 			Sessao s = new Sessao();
 			s.setEspetaculo(this);
 			s.setInicio(proxData.toDateTime(horario));
 			sessoes.add(s);
-			proxData = proxData
-					.plusDays(periodicidade == Periodicidade.DIARIA ? 1
-							: periodicidade == Periodicidade.SEMANAL ? 7 : 1);
+			proxData = periodicidade.calculaDataN(dataInicio, ++i);
 		}
 		return sessoes;
 	}
